@@ -112,6 +112,7 @@
 								<input type="hidden" name="total_venta" if="total_venta" id="total_venta">
 							</th>
 						</tfoot>
+						<input type="hidden" name="vendedor" id="vendedor" required value="{{ Auth::user()->id }}" >
 						<tbody>
 						</tbody>
 					</table>
@@ -138,20 +139,23 @@
 				      <div class="modal-body">
 
 
-				      <div class="col-md-6 col-md-offset-4">
+				      <div class="col-md-offset-3">
 					      <h3>
-					      	<label for="confPalle" id="confPalle">Total $ {{ $total }}</label>
+					      	<label for="confPalle" id="confPalle">Monto Total a Pagar $ {{ $total }}</label>
 					      </h3>
+					      <br>
 					      <input type="text" name="calis" id="calis" required value="{{ $total}}" >
 				      </div>
 
-
-				
+		
 
 					<div class="form-group">
 				     	<div class="col-md-6 col-md-offset-3">
+				     	<div class="col-md-6 col-md-offset-3">
+				     	<h3>  Efectivo</h3></div>
 							<div class="input-group">
-							<input type="text" min=0 id="cantidadAbono" class="form-control"   onchange="muestra()" name="cantidadAbono" placeholder="Cantidad...">
+							
+							<input type="text" min=0 id="cantidadAbono" class="form-control"   onchange="muestra()" name="cantidadAbono" placeholder="Efectivo...">
 								<span class="input-group-btn">
 									<button type="submit" class="btn btn-primary " id="enterAbono" onclick="muestra()">Enter</button>
 								</span>
@@ -161,6 +165,11 @@
 					<div class="col-md-6 col-md-offset-4">
 						<h3>
 							<label id="restante"></label>
+						</h3>
+					</div>
+					<div class="col-md-6 col-md-offset-4">
+						<h3>
+							<label id="cambio"></label>
 						</h3>
 					</div>
 				</div>
@@ -183,6 +192,7 @@ var total;
 window.onload = function() {
     document.getElementById("campoBusca").focus();
     	$("#restante").hide();
+    	$("cambio").hide();
      	$("#calis").hide();
      	$("#botonRealizarVenta").hide();
 };
@@ -198,39 +208,56 @@ window.onload = function() {
 		flg=1;
 		$("#restante").hide();
 		$("#botonRealizarVenta").hide();
+		$("#cambio").hide();
+		$("#cambio").val("");
 	}
 	function muestra(){
-		
-		$("#restante").show();
-		
+		$("cambio").hide();
 		//var text1 = document.getElementById('calis').innerHTML;
 		if(flg==1){
 			flg=0;
 			total = $("#calis").val() - $("#cantidadAbono").val();
-			if(total==0){
+			if(total<=0){
 				$("#botonRealizarVenta").show();
+				$("#cambio").show();
 			}
 			else{
 				$("#botonRealizarVenta").hide();
+				$("#restante").show();
+				$("#cambio").hide();
 			}
+
 		}
 		else{
 			total = total- $("#cantidadAbono").val();
-			if(total==0){
+			if(total<=0){
 				$("#botonRealizarVenta").show();
+				$("#cambio").show();
 			}
 			else{
 				$("#botonRealizarVenta").hide();
+				$("#restante").show();
+				$("#cambio").hide();
 			}
 		}
-		$("#restante").html("Restante: $ "+total);
+		if(total<0){
+			$("#cambio").html("Cambio: $ "+(total * (-1)));
+			$("#restante").hide();
+		}
+		else{
+			$("#restante").html("Faltan: $ "+total);
+		}
+		
 		$("#cantidadAbono").val("");
 	}
 	$(document).ready(function(e){
 		$('#botonRealizarVenta').click(function(){
+			var st = $("#vendedor").val();
+			var x = "/".concat(st);
 			var st1 = $("#idcliente").val();
+			var x2= st1.concat(x);
 			var st2 = "/store/";
-			$.get(st2.concat(st1));
+			$.get(st2.concat(x2));
 			///$("#myModal").hide();
 			
 			$("#descartar").click();

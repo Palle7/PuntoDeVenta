@@ -28,6 +28,6 @@ Route::group(['middleware' => 'usuarioAdmin'], function(){
 	Route::resource('seguridad/usuario','UsuarioController');
 });
 Route::get('elimina', 'VentaController@eliminaTemporalVenta');
-Route::get('store/{id}', 'VentaController@store');
+Route::get('store/{id}/{vendedor}', 'VentaController@store');
 Route::put('cantidad/{id}', 'VentaController@cantidadPro');
 Route::get('/{slug?}', 'HomeController@index');

@@ -32,7 +32,8 @@ class VentaFormRequest extends FormRequest
             'cantidad'=>'required',
             'precio_venta'=>'required',
             'descuento'=>'required',
-            'total_venta'=>'required'
+            'total_venta'=>'required',
+            'idvendedor'=>'min:0'
         ];
     }
 }

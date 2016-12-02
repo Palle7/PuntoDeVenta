@@ -14,6 +14,7 @@ use App\Venta;
 use App\DetalleVenta;
 use App\TemporalVenta;
 use DB;
+use App\User;
 
 use Carbon\Carbon;
 use Response;
@@ -98,9 +99,9 @@ class VentaController extends Controller
 		return view('ventas.venta.create',["personas"=>$personas,"articulos"=>$articulos, "searchText"=>$query, "retVenta"=>$retVenta, "total"=>$total]);
     }
 
-    public function store($id){
+    public function store($id, $vendedor){
         $total=0;
-    	try{
+    	//try{
             $retVenta=DB::table('temporal_venta')->get();
             foreach ($retVenta as $retV) {
                 $total=$total+$retV->subtotal;
@@ -112,6 +113,7 @@ class VentaController extends Controller
     		$mytime = Carbon::now('America/Tijuana');
     		$venta->fecha_hora=$mytime->toDateTimeString();
     		$venta->estado='A';
+            $venta->idvendedor=$vendedor;
     		$venta->save();
 
             foreach ($retVenta as $dV) {
@@ -123,9 +125,9 @@ class VentaController extends Controller
                 $detalle->save();
             }
     		DB::commit();
-    	}catch(\Exception $e){
-    		DB::rollback();
-    	}
+    	//}catch(\Exception $e){
+    	//	DB::rollback();
+    	//}
 
     	$venta = new TemporalVenta;
         $venta = DB::delete('delete from temporal_venta')

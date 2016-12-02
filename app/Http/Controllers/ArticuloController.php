@@ -21,7 +21,7 @@ class ArticuloController extends Controller
     		$query=trim($request->get('searchText'));
     		$articulos=DB::table('articulo as a')
     		->join('categoria as c', 'a.idcategoria','=','c.idcategoria')
-    		->select('a.idarticulo','a.nombre','a.codigo','a.precio','c.nombre as categoria','a.descripcion','a.imagen','a.estado')
+    		->select('a.idarticulo','a.nombre','a.codigo','a.precio','c.nombre as categoria','a.descripcion','a.imagen','a.estado','a.stock')
     		->where('a.nombre','LIKE','%'.$query.'%')
     		->orwhere('a.codigo','LIKE','%'.$query.'%')
 			->orderBy('a.idarticulo','desc')
@@ -38,7 +38,7 @@ class ArticuloController extends Controller
     	$articulo->idcategoria=$request->get('idcategoria');
     	$articulo->codigo=$request->get('codigo');
     	$articulo->nombre=$request->get('nombre');
-    	$articulo->stock=$request->get('stock');
+    	$articulo->stock=0;
         $articulo->costo=$request->get('costo');
         $articulo->precio=$request->get('precio');
     	$articulo->descripcion=$request->get('descripcion');
